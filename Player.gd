@@ -92,6 +92,17 @@ func ground_move(delta):
 func _physics_process(delta):
 	grounded_prev = grounded
 	var input_dir: Vector2 = Input.get_vector("left", "right", "up", "down") 
+	
+	if anim_player.current_animation == "Shoot":
+		pass
+	elif input_dir != Vector2.ZERO and is_on_floor():
+		anim_player.play("Move")
+	elif not is_on_floor():
+		# Optionally, add a jump or fall animation here.
+		pass  
+	else:
+		anim_player.play("Idle")
+
 	wish_dir = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	projected_speed = (velocity * Vector3(1, 0, 1)).dot(wish_dir)
 	if not is_on_floor():
