@@ -16,7 +16,7 @@ var projected_speed: float = 0
 var grounded_prev: bool = true
 var grounded: bool = true
 var wish_dir: Vector3 = Vector3.ZERO
-var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
+var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")*1.5
 
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
