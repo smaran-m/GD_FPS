@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://cvbjp85jj77iw"]
+[gd_scene load_steps=20 format=3 uid="uid://cvbjp85jj77iw"]
 
 [ext_resource type="Script" path="res://Player.gd" id="1_0lr0w"]
 [ext_resource type="PackedScene" uid="uid://dmxv6vm8voyav" path="res://Pistol.blend" id="2_c5v1v"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://cfgywxd1ywmvp" path="res://textures/select.png" id="4_4etd1"]
 [ext_resource type="AudioStream" uid="uid://cmqals0x5uyso" path="res://sfx/gunshot.wav" id="4_pqpr8"]
 [ext_resource type="Script" path="res://RayCast3D.gd" id="6_ebfws"]
+[ext_resource type="AudioStream" uid="uid://c7twx000qwq2v" path="res://sfx/hit.mp3" id="7_g80rb"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_gvejt"]
 size = Vector3(1, 2, 1)
@@ -151,6 +152,8 @@ _data = {
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_0lr0w")
+top_speed_air = 1.5
+gravity_mult = 2.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -181,7 +184,6 @@ draw_pass_1 = SubResource("PlaneMesh_pbdkc")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0778441, 0.101423, -0.30621)
 stream = ExtResource("4_pqpr8")
 volume_db = -10.0
-pitch_scale = 1.5
 
 [node name="RayCast3D" type="RayCast3D" parent="Camera3D"]
 target_position = Vector3(0, 0, -100)
@@ -226,3 +228,7 @@ texture = ExtResource("4_4etd1")
 [node name="SFX" type="Node" parent="."]
 
 [node name="Footsteps" type="AudioStreamPlayer" parent="SFX"]
+
+[node name="Hitsound" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource("7_g80rb")
+volume_db = -15.0

@@ -6,20 +6,25 @@ extends CharacterBody3D
 @onready var gunshot = $Camera3D/Pistol/Gunshot
 @onready var footsteps = $SFX/Footsteps
 @onready var raycast = $Camera3D/RayCast3D
+@onready var hitsound = $SFX/Hitsound
 
 var can_shoot = true
+var zoomed = false
 var dead = false
 
 var health = 100
 
-var mouse_sens: float = 0.001
+@export var mouse_sens: float = 0.001
+@export var fov: int = 90
+var zoom_fov: int = 45
+
 var friction: float = 4
-var accel: float = 12
-var accel_air: float = 40
-var top_speed_ground: float = 15
-var top_speed_air: float = 2.5
+@export var accel: float = 12
+@export var accel_air: float = 40
+@export var top_speed_ground: float = 12
+@export var top_speed_air: float = 2.5
 #added walking
-var walk_speed: float = 7.5
+var walk_speed: float = top_speed_ground*0.5
 var is_walking: bool = false
 var lin_friction_speed: float = 10
 var jump_force: float = 7
@@ -27,7 +32,10 @@ var projected_speed: float = 0
 var grounded_prev: bool = true
 var grounded: bool = true
 var wish_dir: Vector3 = Vector3.ZERO
-var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")*1.7
+@export var gravity_mult: float = 1.75
+var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")*gravity_mult
+
+@export var auto_bhop: bool = false
 
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -49,6 +57,8 @@ func _unhandled_input(event):
 	if Input.is_action_just_pressed("shoot") \
 			and anim_player.current_animation != "Shoot":
 		shoot()
+	if Input.is_action_just_pressed("zoom"):
+		zoom()
 
 func clip_velocity(normal: Vector3, overbounce: float, delta) -> void:
 	var correction_amount: float = 0
@@ -97,8 +107,13 @@ func air_move(delta):
 func ground_move(delta):
 	floor_snap_length = 0.4
 	apply_acceleration(accel, top_speed_ground, delta)
-	if Input.is_action_pressed("jump"):
-		velocity.y = jump_force
+	#if Input.is_action_pressed("jump"):
+	if auto_bhop:
+		if Input.is_action_pressed("jump"):
+			velocity.y = jump_force
+	else:
+		if Input.is_action_just_pressed("jump"):
+			velocity.y = jump_force
 	if grounded == grounded_prev:
 		apply_friction(delta)
 	if is_on_wall:
@@ -139,12 +154,13 @@ func shoot():
 	if !can_shoot:
 		return
 	else:
-		play_shoot_effects()
 		if raycast.is_colliding():
 			print("HIT")
-			if raycast.get_collider().has_method("kill"):
+			if raycast.get_collider().has_method("hit"):
 				print("HIT ENEMY")
-				raycast.get_collider().kill()
+				hitsound.play()
+				raycast.get_collider().hit()
+		play_shoot_effects()
 
 func play_shoot_effects():
 	anim_player.stop()
@@ -152,6 +168,18 @@ func play_shoot_effects():
 	muzzle_flash.restart()
 	muzzle_flash.emitting = true
 	gunshot.play()
+
+func zoom():
+	if !zoomed:
+		camera.fov = zoom_fov
+	else:
+		camera.fov = fov
+	zoomed = !zoomed
+
+func hit(damage = 30):
+	health -= damage
+	if health <= 0:
+		kill()
 
 func kill():
 	dead = true
