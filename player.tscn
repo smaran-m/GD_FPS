@@ -1,9 +1,11 @@
-[gd_scene load_steps=17 format=3 uid="uid://cvbjp85jj77iw"]
+[gd_scene load_steps=19 format=3 uid="uid://cvbjp85jj77iw"]
 
 [ext_resource type="Script" path="res://Player.gd" id="1_0lr0w"]
 [ext_resource type="PackedScene" uid="uid://dmxv6vm8voyav" path="res://Pistol.blend" id="2_c5v1v"]
 [ext_resource type="Texture2D" uid="uid://d0u1vi7ld7oan" path="res://addons/kenney_particle_pack/star_09.png" id="3_alccd"]
 [ext_resource type="Texture2D" uid="uid://cfgywxd1ywmvp" path="res://textures/select.png" id="4_4etd1"]
+[ext_resource type="AudioStream" uid="uid://cmqals0x5uyso" path="res://sfx/gunshot.wav" id="4_pqpr8"]
+[ext_resource type="Script" path="res://RayCast3D.gd" id="6_ebfws"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_gvejt"]
 size = Vector3(1, 2, 1)
@@ -159,7 +161,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("BoxShape3D_p6aqc")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0822044, 1.56382, -0.13875)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+fov = 90.0
 
 [node name="Pistol" parent="Camera3D" instance=ExtResource("2_c5v1v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -0.25, -0.5)
@@ -173,6 +176,17 @@ one_shot = true
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_kkuyb")
 draw_pass_1 = SubResource("PlaneMesh_pbdkc")
+
+[node name="Gunshot" type="AudioStreamPlayer3D" parent="Camera3D/Pistol"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0778441, 0.101423, -0.30621)
+stream = ExtResource("4_pqpr8")
+volume_db = -10.0
+pitch_scale = 1.5
+
+[node name="RayCast3D" type="RayCast3D" parent="Camera3D"]
+target_position = Vector3(0, 0, -100)
+collision_mask = 3
+script = ExtResource("6_ebfws")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 autoplay = "Idle"
@@ -205,5 +219,10 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Sprite2D" type="Sprite2D" parent="UserInterface/Reticle"]
+position = Vector2(20, 20)
 scale = Vector2(0.025, 0.025)
 texture = ExtResource("4_4etd1")
+
+[node name="SFX" type="Node" parent="."]
+
+[node name="Footsteps" type="AudioStreamPlayer" parent="SFX"]

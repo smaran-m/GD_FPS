@@ -3,6 +3,14 @@ extends CharacterBody3D
 @onready var camera: Camera3D = $Camera3D
 @onready var anim_player: AnimationPlayer = $AnimationPlayer
 @onready var muzzle_flash = $Camera3D/Pistol/MuzzleFlash
+@onready var gunshot = $Camera3D/Pistol/Gunshot
+@onready var footsteps = $SFX/Footsteps
+@onready var raycast = $Camera3D/RayCast3D
+
+var can_shoot = true
+var dead = false
+
+var health = 100
 
 var mouse_sens: float = 0.001
 var friction: float = 4
@@ -10,18 +18,23 @@ var accel: float = 12
 var accel_air: float = 40
 var top_speed_ground: float = 15
 var top_speed_air: float = 2.5
+#added walking
+var walk_speed: float = 7.5
+var is_walking: bool = false
 var lin_friction_speed: float = 10
 var jump_force: float = 7
 var projected_speed: float = 0
 var grounded_prev: bool = true
 var grounded: bool = true
 var wish_dir: Vector3 = Vector3.ZERO
-var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")*1.5
+var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")*1.7
 
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _input(event: InputEvent) -> void:
+	if dead:
+		return
 	if event is InputEventMouseButton:
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	elif event.is_action_pressed("ui_cancel"):
@@ -35,7 +48,7 @@ func _input(event: InputEvent) -> void:
 func _unhandled_input(event):
 	if Input.is_action_just_pressed("shoot") \
 			and anim_player.current_animation != "Shoot":
-		play_shoot_effects()
+		shoot()
 
 func clip_velocity(normal: Vector3, overbounce: float, delta) -> void:
 	var correction_amount: float = 0
@@ -63,6 +76,8 @@ func apply_friction(delta):
 	velocity *= speed_scalar
 
 func apply_acceleration(acceleration: float, top_speed: float, delta):
+	if is_walking:
+		top_speed = walk_speed
 	var speed_remaining: float = 0
 	var accel_final: float = 0
 	speed_remaining = (top_speed * wish_dir.length()) - projected_speed
@@ -90,6 +105,7 @@ func ground_move(delta):
 		clip_velocity(get_wall_normal(), 1, delta)
 
 func _physics_process(delta):
+	is_walking = Input.is_action_pressed("walk")
 	grounded_prev = grounded
 	var input_dir: Vector2 = Input.get_vector("left", "right", "up", "down") 
 	
@@ -97,6 +113,7 @@ func _physics_process(delta):
 		pass
 	elif input_dir != Vector2.ZERO and is_on_floor():
 		anim_player.play("Move")
+		footsteps.play()
 	elif not is_on_floor():
 		# Optionally, add a jump or fall animation here.
 		pass  
@@ -106,6 +123,7 @@ func _physics_process(delta):
 	wish_dir = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	projected_speed = (velocity * Vector3(1, 0, 1)).dot(wish_dir)
 	if not is_on_floor():
+		footsteps.stop()
 		grounded = false
 		air_move(delta)
 	if is_on_floor():
@@ -115,12 +133,27 @@ func _physics_process(delta):
 		else:
 			grounded = true
 			ground_move(delta)
-			if Input.is_action_just_pressed("ui_accept"):
-				velocity.y = jump_force
 	move_and_slide()
+
+func shoot():
+	if !can_shoot:
+		return
+	else:
+		play_shoot_effects()
+		if raycast.is_colliding():
+			print("HIT")
+			if raycast.get_collider().has_method("kill"):
+				print("HIT ENEMY")
+				raycast.get_collider().kill()
 
 func play_shoot_effects():
 	anim_player.stop()
 	anim_player.play("Shoot")
 	muzzle_flash.restart()
 	muzzle_flash.emitting = true
+	gunshot.play()
+
+func kill():
+	dead = true
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	#$UserInterface/DeathScreen.show()
