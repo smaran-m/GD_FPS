@@ -5,9 +5,11 @@
 [ext_resource type="Texture2D" uid="uid://d0u1vi7ld7oan" path="res://addons/kenney_particle_pack/star_09.png" id="3_alccd"]
 [ext_resource type="Texture2D" uid="uid://cfgywxd1ywmvp" path="res://textures/select.png" id="4_4etd1"]
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_qwr2e"]
+[sub_resource type="BoxMesh" id="BoxMesh_gvejt"]
+size = Vector3(1, 2, 1)
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_i6jus"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_p6aqc"]
+size = Vector3(1, 2, 1)
 
 [sub_resource type="Gradient" id="Gradient_gvpyp"]
 offsets = PackedFloat32Array(0, 0.113475, 1)
@@ -150,11 +152,11 @@ script = ExtResource("1_0lr0w")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-mesh = SubResource("CapsuleMesh_qwr2e")
+mesh = SubResource("BoxMesh_gvejt")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-shape = SubResource("CapsuleShape3D_i6jus")
+shape = SubResource("BoxShape3D_p6aqc")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0822044, 1.56382, -0.13875)
