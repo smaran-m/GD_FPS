@@ -29,4 +29,5 @@ surface_material_override/2 = SubResource("StandardMaterial3D_fqhrh")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.63815, 0)
 light_color = Color(0.894118, 0.576471, 0.870588, 1)
 light_energy = 8.0
+light_bake_mode = 1
 omni_range = 25.0
