@@ -153,8 +153,6 @@ _data = {
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_0lr0w")
-top_speed_air = 1.5
-gravity_mult = 2.0
 auto_bhop = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]

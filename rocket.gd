@@ -1,6 +1,7 @@
 extends Node3D
 
 const SPEED = 40.0
+const DAMAGE = 80.0
 
 @onready var mesh = $MeshInstance3D
 @onready var ray = $RayCast3D
@@ -22,7 +23,7 @@ func _process(delta):
 		if ray.get_collider().has_method("hit"):
 			print("HIT ENEMY")
 			boom.play()
-			ray.get_collider().hit()
+			ray.get_collider().hit(DAMAGE)
 		await get_tree().create_timer(1.0).timeout
 		queue_free()
 		

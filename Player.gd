@@ -35,7 +35,7 @@ var projected_speed: float = 0
 var grounded_prev: bool = true
 var grounded: bool = true
 var wish_dir: Vector3 = Vector3.ZERO
-@export var gravity_mult: float = 1.75
+@export var gravity_mult: float = 2
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")*gravity_mult
 
 @export var auto_bhop: bool = false

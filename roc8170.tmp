@@ -16,11 +16,11 @@ emission_energy_multiplier = 3.0
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_jew5s"]
 direction = Vector3(0, 0, 1)
-gravity = Vector3(0, 0, 0)
 initial_velocity_min = 3.0
 initial_velocity_max = 5.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_0yd55"]
+size = Vector3(0.1, 0.1, 0.1)
 
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_f6dk1")
@@ -36,7 +36,6 @@ target_position = Vector3(0, 0, -0.55)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.27427)
 material_override = SubResource("StandardMaterial3D_lwvah")
 emitting = false
-amount = 6
 one_shot = true
 explosiveness = 1.0
 process_material = SubResource("ParticleProcessMaterial_jew5s")
