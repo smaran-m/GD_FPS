@@ -21,6 +21,7 @@ func _physics_process(delta):
 	
 func hit(damage = 30):
 	health -= damage
+	$Hitsound.play()
 	$SubViewport/HealthBar3D.value = health if health > 0 else 0
 	if health <= 0:
 		kill()

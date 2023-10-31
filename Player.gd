@@ -1,12 +1,15 @@
 extends CharacterBody3D
 
 @onready var camera: Camera3D = $Camera3D
-@onready var anim_player: AnimationPlayer = $AnimationPlayer
+@onready var anim_player: AnimationPlayer = $Camera3D/Pistol/AnimationPlayer
+@onready var rpg_anim: AnimationPlayer = $Camera3D/RPG/AnimationPlayer
 @onready var muzzle_flash = $Camera3D/Pistol/MuzzleFlash
 @onready var gunshot = $Camera3D/Pistol/Gunshot
 @onready var footsteps = $SFX/Footsteps
 @onready var raycast = $Camera3D/RayCast3D
-@onready var hitsound = $SFX/Hitsound
+
+var rocket = load("res://rocket.tscn")
+var instance
 
 var can_shoot = true
 var zoomed = false
@@ -15,7 +18,7 @@ var dead = false
 var health = 100
 
 @export var mouse_sens: float = 0.001
-@export var fov: int = 90
+@export var fov: int = 75
 var zoom_fov: int = 45
 
 var friction: float = 4
@@ -54,8 +57,7 @@ func _input(event: InputEvent) -> void:
 			camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-80), deg_to_rad(60))
 
 func _unhandled_input(event):
-	if Input.is_action_just_pressed("shoot") \
-			and anim_player.current_animation != "Shoot":
+	if Input.is_action_just_pressed("shoot"):
 		shoot()
 	if Input.is_action_just_pressed("zoom"):
 		zoom()
@@ -154,20 +156,35 @@ func shoot():
 	if !can_shoot:
 		return
 	else:
+		#_shoot_pistol()
+		_shoot_rpg()
+
+func _shoot_pistol():
+	if anim_player.current_animation != "Shoot":
 		if raycast.is_colliding():
 			print("HIT")
 			if raycast.get_collider().has_method("hit"):
 				print("HIT ENEMY")
-				hitsound.play()
 				raycast.get_collider().hit()
-		play_shoot_effects()
-
-func play_shoot_effects():
+# ANIMATIONS
 	anim_player.stop()
 	anim_player.play("Shoot")
 	muzzle_flash.restart()
 	muzzle_flash.emitting = true
 	gunshot.play()
+
+func _shoot_rpg():
+	if rpg_anim.current_animation != "Shoot":
+		instance = rocket.instantiate()
+		instance.position = raycast.global_position
+		instance.transform.basis = raycast.global_transform.basis
+		get_parent().add_child(instance)
+# ANIMATIONS
+	rpg_anim.stop()
+	rpg_anim.play("Shoot")
+	$Camera3D/RPG/RPG_Model/MuzzleFlash.restart()
+	$Camera3D/RPG/RPG_Model/MuzzleFlash.emitting = true
+	$Camera3D/RPG/FireSound.play()
 
 func zoom():
 	if !zoomed:

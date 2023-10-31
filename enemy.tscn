@@ -1,6 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://c8x16ko1wavwe"]
+[gd_scene load_steps=9 format=3 uid="uid://c8x16ko1wavwe"]
 
 [ext_resource type="Script" path="res://enemy.gd" id="1_s0vye"]
+[ext_resource type="AudioStream" uid="uid://c7twx000qwq2v" path="res://sfx/hit.mp3" id="2_x38r6"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_rktt8"]
 
@@ -61,3 +62,7 @@ theme_override_styles/background = SubResource("StyleBoxFlat_i8hgq")
 theme_override_styles/fill = SubResource("StyleBoxFlat_asv6x")
 value = 100.0
 show_percentage = false
+
+[node name="Hitsound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_x38r6")
+volume_db = -15.0

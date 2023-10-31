@@ -1,0 +1,149 @@
+[gd_scene load_steps=13 format=3 uid="uid://cmc20togvf7i"]
+
+[ext_resource type="PackedScene" uid="uid://corbmhjb88f21" path="res://RPG.blend" id="1_jqk7u"]
+[ext_resource type="Texture2D" uid="uid://cfjak55m2g6r6" path="res://addons/kenney_particle_pack/smoke_02.png" id="2_wapbf"]
+[ext_resource type="AudioStream" uid="uid://cof4n2hsemqgh" path="res://sfx/fire_sound.mp3" id="3_fo7hm"]
+
+[sub_resource type="Gradient" id="Gradient_4vfoi"]
+offsets = PackedFloat32Array(0, 0.269504, 1)
+colors = PackedColorArray(0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_lvclq"]
+gradient = SubResource("Gradient_4vfoi")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_pq3h5"]
+gravity = Vector3(0, 1, 0)
+color_ramp = SubResource("GradientTexture1D_lvclq")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7sm83"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("2_wapbf")
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_0fjit"]
+material = SubResource("StandardMaterial3D_7sm83")
+size = Vector2(0.5, 0.5)
+orientation = 2
+
+[sub_resource type="Animation" id="Animation_4eme6"]
+resource_name = "Idle"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RPG_Model:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1, 1.5),
+"transitions": PackedFloat32Array(0.5, 2, 0.5, 2),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0.05, 0), Vector3(0, 0, 0), Vector3(0, -0.05, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("RPG_Model:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5, 1, 1.5),
+"transitions": PackedFloat32Array(0.5, 2, 0.5, 2),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0, 0.0174533), Vector3(0, 0, 0), Vector3(0, 0, -0.0174533)]
+}
+
+[sub_resource type="Animation" id="Animation_0b8r7"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RPG_Model:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("RPG_Model:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.0349066, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_4lmxe"]
+resource_name = "Shoot"
+length = 0.6
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RPG_Model:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.3, 0.55),
+"transitions": PackedFloat32Array(1, 0.5, -0.5, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0.05, 0.5), Vector3(0, -0.05, 0.05), Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("RPG_Model:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.3, 0.55),
+"transitions": PackedFloat32Array(1, 0.5, -0.5, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0.174533, 0, 0), Vector3(-0.0349066, 0, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ukeo0"]
+_data = {
+"Idle": SubResource("Animation_4eme6"),
+"RESET": SubResource("Animation_0b8r7"),
+"Shoot": SubResource("Animation_4lmxe")
+}
+
+[node name="RPG" type="Node3D"]
+
+[node name="RPG_Model" parent="." instance=ExtResource("1_jqk7u")]
+transform = Transform3D(1, 0, 0, 0, 0.999391, 0.0348995, 0, -0.0348995, 0.999391, 0, 0, 0)
+
+[node name="MuzzleFlash" type="GPUParticles3D" parent="RPG_Model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0429264, -1.42218)
+emitting = false
+amount = 1
+lifetime = 0.5
+one_shot = true
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_pq3h5")
+draw_pass_1 = SubResource("PlaneMesh_0fjit")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "Idle"
+libraries = {
+"": SubResource("AnimationLibrary_ukeo0")
+}
+
+[node name="FireSound" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.50541)
+stream = ExtResource("3_fo7hm")
+volume_db = -10.0
