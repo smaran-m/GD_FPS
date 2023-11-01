@@ -26,7 +26,7 @@ var dead = false
 var health = 100
 
 @export var mouse_sens: float = 0.001
-@export var fov: int = 75
+@export var fov: int = 90
 var zoom_fov: int = 45
 
 var friction: float = 4

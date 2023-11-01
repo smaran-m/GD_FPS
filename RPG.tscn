@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cmc20togvf7i"]
+[gd_scene load_steps=14 format=3 uid="uid://cmc20togvf7i"]
 
 [ext_resource type="PackedScene" uid="uid://corbmhjb88f21" path="res://RPG.blend" id="1_jqk7u"]
 [ext_resource type="Texture2D" uid="uid://cfjak55m2g6r6" path="res://addons/kenney_particle_pack/smoke_02.png" id="2_wapbf"]
@@ -115,9 +115,27 @@ tracks/1/keys = {
 "values": [Vector3(0, 0, 0), Vector3(0.174533, 0, 0), Vector3(-0.0349066, 0, 0), Vector3(0, 0, 0)]
 }
 
+[sub_resource type="Animation" id="Animation_atg5w"]
+resource_name = "Move"
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RPG_Model:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6),
+"transitions": PackedFloat32Array(0.5, 2, 0.5, 2),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0.05, 0), Vector3(0, 0, 0), Vector3(0, -0.05, 0)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ukeo0"]
 _data = {
 "Idle": SubResource("Animation_4eme6"),
+"Move": SubResource("Animation_atg5w"),
 "RESET": SubResource("Animation_0b8r7"),
 "Shoot": SubResource("Animation_4lmxe")
 }
@@ -128,7 +146,6 @@ _data = {
 transform = Transform3D(1, 0, 0, 0, 0.999391, 0.0348995, 0, -0.0348995, 0.999391, 0, 0, 0)
 
 [node name="MuzzleFlash" type="GPUParticles3D" parent="RPG_Model"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0429264, -1.42218)
 emitting = false
 amount = 1
 lifetime = 0.5
