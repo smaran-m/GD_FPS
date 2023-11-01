@@ -10,6 +10,7 @@ extends CharacterBody3D
 
 var rocket = load("res://rocket.tscn")
 var instance
+var knockback_scale = 0.5
 
 var can_shoot = true
 var zoomed = false
@@ -102,7 +103,7 @@ func apply_acceleration(acceleration: float, top_speed: float, delta):
 
 func air_move(delta):
 	apply_acceleration(accel_air, top_speed_air, delta)
-	clip_velocity(get_wall_normal(), 14, delta)
+	clip_velocity(get_wall_normal(), 14, delta) # what does 14 refer to here
 	clip_velocity(get_floor_normal(), 14, delta)
 	velocity.y -= gravity * delta
 
@@ -165,7 +166,8 @@ func _shoot_pistol():
 			print("HIT")
 			if raycast.get_collider().has_method("hit"):
 				print("HIT ENEMY")
-				raycast.get_collider().hit()
+				var attack_vector = raycast.global_transform.basis.z.normalized()  # Assuming the raycast is facing along the Z axis
+				raycast.get_collider().hit(30, attack_vector)
 # ANIMATIONS
 	anim_player.stop()
 	anim_player.play("Shoot")
@@ -193,12 +195,19 @@ func zoom():
 		camera.fov = fov
 	zoomed = !zoomed
 
-func hit(damage = 30):
+func hit(damage = 1, attack_vector: Vector3 = Vector3()):
 	health -= damage
 	if health <= 0:
 		kill()
+	
+	# KNOCKBACK
+	if attack_vector != Vector3():
+		var knockback_direction = attack_vector.normalized()
+		var knockback_magnitude = damage * knockback_scale  # Assume knockback_scale is a constant value you've defined
+		velocity += knockback_direction * knockback_magnitude
 
 func kill():
-	dead = true
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	pass
+	#dead = true
+	#Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	#$UserInterface/DeathScreen.show()

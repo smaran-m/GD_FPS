@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://bafn41qbqx5ch"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_j1nuf"]
+margin = 0.1
+radius = 2.0
+
+[node name="ExplosionArea" type="Area3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_j1nuf")
