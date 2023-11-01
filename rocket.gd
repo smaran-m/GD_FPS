@@ -1,7 +1,7 @@
 extends Node3D
 
 const SPEED = 40.0
-const DAMAGE = 20.0
+const DAMAGE = 60.0
 
 @onready var mesh = $Rocket
 @onready var ray = $RayCast3D

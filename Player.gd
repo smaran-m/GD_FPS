@@ -2,15 +2,22 @@ extends CharacterBody3D
 
 @onready var camera: Camera3D = $Camera3D
 @onready var anim_player: AnimationPlayer = $Camera3D/Pistol/AnimationPlayer
-@onready var rpg_anim: AnimationPlayer = $Camera3D/RPG/AnimationPlayer
 @onready var muzzle_flash = $Camera3D/Pistol/MuzzleFlash
 @onready var gunshot = $Camera3D/Pistol/Gunshot
 @onready var footsteps = $SFX/Footsteps
 @onready var raycast = $Camera3D/RayCast3D
 
+@onready var pistol_node = $Camera3D/Pistol
+@onready var rpg_node = $Camera3D/RPG
+enum WeaponType {
+	PISTOL,
+	RPG
+}
+var current_weapon: WeaponType = WeaponType.PISTOL
+
 var rocket = load("res://rocket.tscn")
 var instance
-var knockback_scale = 0.5
+var knockback_scale = 0.3
 
 var can_shoot = true
 var zoomed = false
@@ -62,6 +69,8 @@ func _unhandled_input(event):
 		shoot()
 	if Input.is_action_just_pressed("zoom"):
 		zoom()
+	if Input.is_action_just_pressed("toggle"):
+		switch_weapon()
 
 func clip_velocity(normal: Vector3, overbounce: float, delta) -> void:
 	var correction_amount: float = 0
@@ -157,8 +166,11 @@ func shoot():
 	if !can_shoot:
 		return
 	else:
-		#_shoot_pistol()
-		_shoot_rpg()
+		match current_weapon:
+			WeaponType.PISTOL:
+				_shoot_pistol()
+			WeaponType.RPG:
+				_shoot_rpg()
 
 func _shoot_pistol():
 	if anim_player.current_animation != "Shoot":
@@ -176,14 +188,14 @@ func _shoot_pistol():
 	gunshot.play()
 
 func _shoot_rpg():
-	if rpg_anim.current_animation != "Shoot":
+	if anim_player.current_animation != "Shoot":
 		instance = rocket.instantiate()
 		instance.position = raycast.global_position
 		instance.transform.basis = raycast.global_transform.basis
 		get_parent().add_child(instance)
 # ANIMATIONS
-	rpg_anim.stop()
-	rpg_anim.play("Shoot")
+	anim_player.stop()
+	anim_player.play("Shoot")
 	$Camera3D/RPG/RPG_Model/MuzzleFlash.restart()
 	$Camera3D/RPG/RPG_Model/MuzzleFlash.emitting = true
 	$Camera3D/RPG/FireSound.play()
@@ -211,3 +223,17 @@ func kill():
 	#dead = true
 	#Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	#$UserInterface/DeathScreen.show()
+
+func switch_weapon(): # Need to make this work for any loadout
+	match current_weapon:
+		WeaponType.PISTOL:
+			current_weapon = WeaponType.RPG
+			anim_player = $Camera3D/RPG/AnimationPlayer
+			pistol_node.visible = false
+			rpg_node.visible = true
+		WeaponType.RPG:
+			current_weapon = WeaponType.PISTOL
+			anim_player = $Camera3D/Pistol/AnimationPlayer
+			rpg_node.visible = false
+			pistol_node.visible = true
+
