@@ -31,7 +31,7 @@ func explode():
 	particles.emitting = true
 	boom.play()
 	await get_tree().create_timer(1.0).timeout
-	queue_free()
+	queue_free() #area collider still exists after collision for 1 second
 
 func _on_timer_timeout(): #FIXME, doesn't get activated
 	queue_free()

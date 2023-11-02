@@ -2,8 +2,6 @@ extends CharacterBody3D
 
 @onready var camera: Camera3D = $Camera3D
 @onready var anim_player: AnimationPlayer = $Camera3D/Pistol/AnimationPlayer
-@onready var muzzle_flash = $Camera3D/Pistol/MuzzleFlash
-@onready var gunshot = $Camera3D/Pistol/Gunshot
 @onready var footsteps = $SFX/Footsteps
 @onready var raycast = $Camera3D/RayCast3D
 
@@ -29,7 +27,7 @@ var health = 100
 @export var fov: int = 90
 var zoom_fov: int = 45
 
-var friction: float = 4
+@export var friction: float = 4
 @export var accel: float = 12
 @export var accel_air: float = 40
 @export var top_speed_ground: float = 12
@@ -38,7 +36,7 @@ var friction: float = 4
 var walk_speed: float = top_speed_ground*0.5
 var is_walking: bool = false
 var lin_friction_speed: float = 10
-var jump_force: float = 7
+@export var jump_force: float = 7
 var projected_speed: float = 0
 var grounded_prev: bool = true
 var grounded: bool = true
@@ -183,9 +181,9 @@ func _shoot_pistol():
 # ANIMATIONS
 	anim_player.stop()
 	anim_player.play("Shoot")
-	muzzle_flash.restart()
-	muzzle_flash.emitting = true
-	gunshot.play()
+	$Camera3D/Pistol/MuzzleFlash.restart()
+	$Camera3D/Pistol/MuzzleFlash.emitting = true
+	$Camera3D/Pistol/Gunshot.play()
 
 func _shoot_rpg():
 	if anim_player.current_animation != "Shoot":
