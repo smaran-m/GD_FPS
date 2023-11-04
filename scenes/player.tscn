@@ -1,11 +1,10 @@
 [gd_scene load_steps=9 format=3 uid="uid://cvbjp85jj77iw"]
 
-[ext_resource type="Script" path="res://Player.gd" id="1_0lr0w"]
-[ext_resource type="Texture2D" uid="uid://cfgywxd1ywmvp" path="res://textures/select.png" id="4_4etd1"]
-[ext_resource type="PackedScene" uid="uid://cp5mnrh020hpx" path="res://pistol.tscn" id="4_ae7v6"]
-[ext_resource type="Script" path="res://RayCast3D.gd" id="6_ebfws"]
-[ext_resource type="PackedScene" uid="uid://cmc20togvf7i" path="res://RPG.tscn" id="6_ogfsc"]
-[ext_resource type="AudioStream" uid="uid://c7twx000qwq2v" path="res://sfx/hit.mp3" id="7_g80rb"]
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_qpb4g"]
+[ext_resource type="PackedScene" uid="uid://cmc20togvf7i" path="res://scenes/RPG.tscn" id="2_vlubi"]
+[ext_resource type="PackedScene" uid="uid://cp5mnrh020hpx" path="res://scenes/pistol.tscn" id="3_sc2qx"]
+[ext_resource type="Texture2D" uid="uid://cfgywxd1ywmvp" path="res://textures/select.png" id="4_pa27n"]
+[ext_resource type="AudioStream" uid="uid://c7twx000qwq2v" path="res://sfx/hit.mp3" id="5_8nf46"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_gvejt"]
 size = Vector3(1, 2, 1)
@@ -13,8 +12,26 @@ size = Vector3(1, 2, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_p6aqc"]
 size = Vector3(1, 2, 1)
 
+[sub_resource type="GDScript" id="GDScript_ybwxx"]
+script/source = "extends RayCast3D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	pass
+	#if is_colliding():
+	#	print(\"Colliding!\")
+	#else:
+	#	print(\"Not Colliding!\")
+"
+
 [node name="Player" type="CharacterBody3D"]
-script = ExtResource("1_0lr0w")
+script = ExtResource("1_qpb4g")
 auto_bhop = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
@@ -33,13 +50,13 @@ fov = 90.0
 visible = false
 target_position = Vector3(0, 0, -100)
 collision_mask = 3
-script = ExtResource("6_ebfws")
+script = SubResource("GDScript_ybwxx")
 
-[node name="RPG" parent="Camera3D" instance=ExtResource("6_ogfsc")]
+[node name="RPG" parent="Camera3D" instance=ExtResource("2_vlubi")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.562195, -0.291243, 0.375271)
 visible = false
 
-[node name="Pistol" parent="Camera3D" instance=ExtResource("4_ae7v6")]
+[node name="Pistol" parent="Camera3D" instance=ExtResource("3_sc2qx")]
 
 [node name="UserInterface" type="Control" parent="."]
 layout_mode = 3
@@ -67,12 +84,20 @@ grow_vertical = 2
 [node name="Sprite2D" type="Sprite2D" parent="UserInterface/Reticle"]
 position = Vector2(20, 20)
 scale = Vector2(0.025, 0.025)
-texture = ExtResource("4_4etd1")
+texture = ExtResource("4_pa27n")
+
+[node name="HP" type="RichTextLabel" parent="UserInterface"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
 
 [node name="SFX" type="Node" parent="."]
 
 [node name="Footsteps" type="AudioStreamPlayer" parent="SFX"]
 
 [node name="Hitsound" type="AudioStreamPlayer" parent="SFX"]
-stream = ExtResource("7_g80rb")
+stream = ExtResource("5_8nf46")
 volume_db = -15.0

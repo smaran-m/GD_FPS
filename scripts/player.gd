@@ -4,16 +4,18 @@ extends CharacterBody3D
 @onready var anim_player: AnimationPlayer = $Camera3D/Pistol/AnimationPlayer
 @onready var footsteps = $SFX/Footsteps
 @onready var raycast = $Camera3D/RayCast3D
+@onready var hp_label = $UserInterface/HP
 
 @onready var pistol_node = $Camera3D/Pistol
 @onready var rpg_node = $Camera3D/RPG
+
 enum WeaponType {
 	PISTOL,
 	RPG
 }
 var current_weapon: WeaponType = WeaponType.PISTOL
 
-var rocket = load("res://rocket.tscn")
+var rocket = load("res://scenes/rocket.tscn")
 var instance
 var knockback_scale = 0.3
 
@@ -42,12 +44,14 @@ var grounded_prev: bool = true
 var grounded: bool = true
 var wish_dir: Vector3 = Vector3.ZERO
 @export var gravity_mult: float = 2
-var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")*gravity_mult
+var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")\
+	*gravity_mult
 
 @export var auto_bhop: bool = false
 
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	hp_label.add_text(str(health))
 
 func _input(event: InputEvent) -> void:
 	if dead:
@@ -177,8 +181,8 @@ func _shoot_pistol():
 			if raycast.get_collider().has_method("hit"):
 				print("HIT ENEMY")
 				var attack_vector = raycast.global_transform.basis.z.normalized()  # Assuming the raycast is facing along the Z axis
-				raycast.get_collider().hit(30, attack_vector)
-# ANIMATIONS
+				raycast.get_collider().hit(10)
+	# ANIMATIONS
 	anim_player.stop()
 	anim_player.play("Shoot")
 	$Camera3D/Pistol/MuzzleFlash.restart()
@@ -191,7 +195,7 @@ func _shoot_rpg():
 		instance.position = raycast.global_position
 		instance.transform.basis = raycast.global_transform.basis
 		get_parent().add_child(instance)
-# ANIMATIONS
+	# ANIMATIONS
 	anim_player.stop()
 	anim_player.play("Shoot")
 	$Camera3D/RPG/RPG_Model/MuzzleFlash.restart()
@@ -205,8 +209,10 @@ func zoom():
 		camera.fov = fov
 	zoomed = !zoomed
 
-func hit(damage = 1, attack_vector: Vector3 = Vector3()):
+func hit(damage = 1, attack_vector: Vector3 = Vector3(0,0,0)):
 	health -= damage
+	hp_label.clear()
+	hp_label.add_text(str(health))
 	if health <= 0:
 		kill()
 	
@@ -217,10 +223,13 @@ func hit(damage = 1, attack_vector: Vector3 = Vector3()):
 		velocity += knockback_direction * knockback_magnitude
 
 func kill():
+	hp_label.clear()
+	hp_label.add_text("SUPER LONG DEATH LABEL FOR TESTS")
 	pass
 	#dead = true
 	#Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	#$UserInterface/DeathScreen.show()
+	#queue_free()
 
 func switch_weapon(): # Need to make this work for any loadout
 	match current_weapon:

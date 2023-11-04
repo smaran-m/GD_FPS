@@ -1,6 +1,6 @@
 [gd_scene load_steps=14 format=3 uid="uid://cmc20togvf7i"]
 
-[ext_resource type="PackedScene" uid="uid://corbmhjb88f21" path="res://RPG.blend" id="1_jqk7u"]
+[ext_resource type="PackedScene" uid="uid://corbmhjb88f21" path="res://models/RPG.blend" id="1_jqk7u"]
 [ext_resource type="Texture2D" uid="uid://cfjak55m2g6r6" path="res://addons/kenney_particle_pack/smoke_02.png" id="2_wapbf"]
 [ext_resource type="AudioStream" uid="uid://cof4n2hsemqgh" path="res://sfx/fire_sound.mp3" id="3_fo7hm"]
 
@@ -163,4 +163,4 @@ libraries = {
 [node name="FireSound" type="AudioStreamPlayer3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.50541)
 stream = ExtResource("3_fo7hm")
-volume_db = -10.0
+volume_db = -15.0

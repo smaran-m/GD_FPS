@@ -1,9 +1,9 @@
 [gd_scene load_steps=8 format=3 uid="uid://gxp7rulhnhp3"]
 
-[ext_resource type="Script" path="res://rocket.gd" id="1_f6dk1"]
-[ext_resource type="PackedScene" uid="uid://f6jebd1wiaif" path="res://Rocket.blend" id="2_jmn0k"]
+[ext_resource type="Script" path="res://scripts/rocket.gd" id="1_f6dk1"]
+[ext_resource type="PackedScene" uid="uid://f6jebd1wiaif" path="res://models/Rocket.blend" id="2_jmn0k"]
 [ext_resource type="AudioStream" uid="uid://c0lccxc3o55dn" path="res://sfx/explode.wav" id="2_jsubg"]
-[ext_resource type="PackedScene" uid="uid://bafn41qbqx5ch" path="res://explosion_area.tscn" id="3_2aabw"]
+[ext_resource type="PackedScene" uid="uid://bafn41qbqx5ch" path="res://scenes/explosion_area.tscn" id="3_2aabw"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lwvah"]
 
