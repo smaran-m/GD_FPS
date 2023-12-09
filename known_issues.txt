@@ -1,2 +1,0 @@
-- weapon switching is hard coded to pistol and RPG
--- _shoot_pistol calls hit(30) instead of actually using a damage value
